@@ -1,6 +1,6 @@
 default: docker_build
 
-DOCKER_IMAGE ?= site-demo
+DOCKER_IMAGE ?= nginx-site-demo
 GIT_BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
 
 ifeq ($(GIT_BRANCH), master)
