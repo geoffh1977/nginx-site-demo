@@ -7,7 +7,7 @@ def pipeline = new org.pipeline.Pipeline()
 
 // Specify Kuernetes Pod Template For Operations
 podTemplate(label: 'jenkins-pipeline', containers: [
-    containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest', args: '${computer.jnlpmac} ${computer.name}', resourceRequestCpu: '200m', resourceLimitCpu: '200m', resourceRequestMemory: '256Mi', resourceLimitMemory: '256Mi'),
+    containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest', args: '${computer.jnlpmac} ${computer.name}', resourceRequestCpu: '200m', resourceLimitCpu: '200m', resourceRequestMemory: '512Mi', resourceLimitMemory: '512Mi'),
     containerTemplate(name: 'docker', image: 'docker:17.03.2-ce', command: 'cat', ttyEnabled: true)
 ],
 volumes:[
