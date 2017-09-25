@@ -1,0 +1,15 @@
+{
+  "container_repo": {
+    "host": "registry.hub.docker.com",
+    "master_acct": "geoffh1977",
+    "alt_acct": "geoffh1977",
+    "jenkins_creds_id": "docker-hub-credentials",
+    "repo": "nginx-site-demo",
+    "dockeremail": ".",
+    "dockerfile": "./"
+  },
+  "pipeline": {
+      "enabled": true,
+      "debug": false
+  }
+}
