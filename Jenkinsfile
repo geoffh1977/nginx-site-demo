@@ -8,7 +8,9 @@ def pipeline = new org.pipeline.Pipeline()
 // Specify Kuernetes Pod Template For Operations
 podTemplate(label: 'nginx-site-demo-pipeline', containers: [
     containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest', args: '${computer.jnlpmac} ${computer.name}', resourceRequestCpu: '200m', resourceLimitCpu: '200m', resourceRequestMemory: '512Mi', resourceLimitMemory: '512Mi'),
-    containerTemplate(name: 'docker', image: 'docker:17.03.2-ce', command: 'cat', ttyEnabled: true)
+    containerTemplate(name: 'docker', image: 'docker:17.03.2-ce', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'helm', image: 'geoffh1977/k8s-helm:latest', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'kubectl', image: 'geoffh1977/k8s-kubectl:latest', command: 'cat', ttyEnabled: true)
 ],
 volumes:[
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
@@ -40,6 +42,15 @@ volumes:[
     if (config.pipeline.debug) {
       println "Debug Mode Enabled"
       sh "env | sort"
+
+      println "Running Kubectl And Helm Tests"
+      container('kubectl') {
+        pipeline.kubectlTest()
+      }
+      container('helm') {
+        pipeline.helmConfig()
+      }
+
     }
 
     // Set Account To Push To From Branch Name
