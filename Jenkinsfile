@@ -15,7 +15,7 @@ volumes:[
 ]){
 
   // Start Building Pipeline For Jenkins
-  node ('nginx-site-demo') {
+  node ('nginx-site-demo-pipeline') {
 
     // Clone In The Git Repository
     stage ('Clone Repository') {
