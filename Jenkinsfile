@@ -23,8 +23,7 @@ volumes:[
     stage ('Clone Repository') {
       checkout scm
     }
-    def pwd = pwd()
-    def chart_dir = "${pwd}/charts/nginx-site-demo"
+
     // Read In The Required Workflow Values
     def inputFile = readFile('Jenkinsfile.json')
     def config = new groovy.json.JsonSlurperClassic().parseText(inputFile)
@@ -41,19 +40,21 @@ volumes:[
 
     // Debug Mode Enabled - Display Extra Information
     if (config.pipeline.debug) {
-      println "Debug Mode Enabled"
+      println "Debug Mode Enabled - Showing Environment"
       sh "env | sort"
 
-      println "Running Kubectl And Helm Tests"
+      println "Debug Mode Enabled - Running Kubectl And Helm Test"
       container('kubectl') {
         pipeline.kubectlTest()
       }
       container('helm') {
         pipeline.helmConfig()
       }
-
     }
 
+    // Set Current Path And Chart Directory
+    def pwd = pwd()
+    def chart_dir = "${pwd}/charts/nginx-site-demo"
     // Set Account To Push To From Branch Name
     def acct = pipeline.getContainerRepoAcct(config)
     // Tag Docker Image With version, And branch-commit_id
@@ -62,7 +63,7 @@ volumes:[
     def image_tags_list = pipeline.getMapValues(image_tags_map)
 
     // Test Deployment Code Before Building Container
-    stage ('Test Deploy Code') {
+    stage ('Test Helm Deploy Code') {
       container('helm') {
         // Lint Helm Chart Code
         pipeline.helmLint(chart_dir)
