@@ -13,6 +13,7 @@ LABEL org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.docker.dockerfile="/Dockerfile"
 
 RUN apk add --update nginx curl && rm -rf /var/cache/apk/* && \
+  mkdir -p /usr/share/nginx/html && \
   touch /usr/share/nginx/html/healthz && \
   mkdir -p /tmp/nginx/client-body
 
