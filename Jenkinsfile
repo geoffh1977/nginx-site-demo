@@ -61,6 +61,27 @@ volumes:[
     // Compile Tag List From Tag Map
     def image_tags_list = pipeline.getMapValues(image_tags_map)
 
+    // Test Deployment Code Before Building Container
+    stage ('Test Deploy Code') {
+      container('helm') {
+        // Lint Helm Chart Code
+        pipeline.helmLint(chart_dir)
+
+        // Dry-Run Deployment
+        pipeline.helmDeploy(
+          dry_run       : true,
+          name          : config.app.name,
+          namespace     : config.app.name,
+          version_tag   : image_tags_list.get(0),
+          chart_dir     : chart_dir,
+          replicas      : config.app.replicas,
+          cpu           : config.app.cpu,
+          memory        : config.app.memory,
+          hostname      : config.app.hostname
+        )
+      }
+    }
+
     // Build And Publish Container Image
     stage ('Buld/Publish Container Image') {
       container('docker') {
@@ -72,6 +93,33 @@ volumes:[
             tags      : image_tags_list,
             auth_id   : config.container_repo.jenkins_creds_id
         )
+      }
+    }
+
+    // Live Deploy Only If Branch Is Master
+    if (env.BRANCH_NAME == 'master') {
+      stage ('Deploy To K8s') {
+        container('helm') {
+          // Deploy Using Helm Chart
+          pipeline.helmDeploy(
+            dry_run       : false,
+            name          : config.app.name,
+            namespace     : config.app.name,
+            version_tag   : image_tags_list.get(0),
+            chart_dir     : chart_dir,
+            replicas      : config.app.replicas,
+            cpu           : config.app.cpu,
+            memory        : config.app.memory,
+            hostname      : config.app.hostname
+          )
+
+          //  Run Helm Tests On Deployment
+          if (config.app.test) {
+            pipeline.helmTest(
+              name          : config.app.name
+            )
+          }
+        }
       }
     }
   }
