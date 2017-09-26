@@ -24,6 +24,7 @@ volumes:[
       checkout scm
     }
     def pwd = pwd()
+    def chart_dir = "${pwd}/charts/nginx-site-demo"
     // Read In The Required Workflow Values
     def inputFile = readFile('Jenkinsfile.json')
     def config = new groovy.json.JsonSlurperClassic().parseText(inputFile)

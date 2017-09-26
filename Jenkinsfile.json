@@ -1,4 +1,12 @@
 {
+  "app": {
+    "name": "nginx-site-demo",
+    "replicas": "3",
+    "cpu": "10m",
+    "memory": "128Mi",
+    "test": true,
+    "hostname": "demo.kube.local"
+  },
   "container_repo": {
     "host": "registry.hub.docker.com",
     "master_acct": "geoffh1977",

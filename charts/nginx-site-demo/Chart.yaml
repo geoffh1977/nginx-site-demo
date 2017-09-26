@@ -1,0 +1,10 @@
+name: nginx-site-demo
+home: https://github.com/geoffh1977/nginx-site-demo
+version: 0.0.1
+description: NgInx Site Demo
+sources:
+  - https://github.com/geoffh1977/nginx-site-demo
+maintainers:
+  - name: Geoffrey Harrison
+    email: Geoff.Harrison@bulletproof.net
+    
