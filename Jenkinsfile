@@ -99,8 +99,8 @@ volumes:[
 
     // Live Deploy Only If Branch Is Master
     if (env.BRANCH_NAME == 'master') {
-      stage ('Deploy To K8s') {
-        container('helm') {
+      container('helm') {
+        stage ('Deploy To K8s') {
           // Deploy Using Helm Chart
           pipeline.helmDeploy(
             dry_run       : false,
@@ -113,9 +113,10 @@ volumes:[
             memory        : config.app.memory,
             hostname      : config.app.hostname
           )
-
-          //  Run Helm Tests On Deployment
-          if (config.app.test) {
+        }
+        //  Run Helm Tests On Deployment
+        if (config.app.test) {
+          stage ('Test K8s Deployment') {
             pipeline.helmTest(
               name          : config.app.name
             )
