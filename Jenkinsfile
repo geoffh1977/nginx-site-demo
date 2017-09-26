@@ -63,7 +63,7 @@ volumes:[
     def image_tags_list = pipeline.getMapValues(image_tags_map)
 
     // Test Deployment Code Before Building Container
-    stage ('Test Helm Deploy Code') {
+    stage ('Test Helm Chart Deployment') {
       container('helm') {
         // Lint Helm Chart Code
         pipeline.helmLint(chart_dir)
